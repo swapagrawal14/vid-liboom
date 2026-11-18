@@ -36,11 +36,29 @@ script.md  ──►  scene planner  ──►  characters + backgrounds  ──
 5. **Score**: music and effects are generated to match the mood.
 6. **Render**: everything is composited into one video with subtitles.
 
+## 🚀 Quick start
+
+```bash
+pip install -r requirements.txt   # needs ffmpeg on PATH
+python -m vidliboom examples/bablu_mausam.md -o output/episode.mp4
+```
+
+Script format:
+
+```markdown
+# Episode title
+## Scene: Ghar ke bahar | bg=sky | mood=day
+BABLU: Aaj toh mausam ekdum mast hai!
+(stage direction)
+```
+
+Moods: `day`, `sunset`, `night`, `rain`. Put character PNGs in `assets/characters/` (e.g. `BABLU.png`).
+
 ## 🗺️ Roadmap
 
 | # | Milestone | Status |
 |---|-----------|--------|
-| 1 | Script-to-episode pipeline | 🚧 Next up |
+| 1 | Script-to-episode pipeline | 🚧 v0.1: parser, planner, shader backgrounds, subtitles, render |
 | 2 | Interactive dental explainers | 📝 Planned |
 | 3 | Playable mini-games after each episode | 📝 Planned |
 | 4 | Personalised videos from one template | 📝 Planned |
