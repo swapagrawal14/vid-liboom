@@ -4,6 +4,7 @@ Format:
     # Episode title
     ## Scene: <name> | bg=<background> | mood=<mood>
     BABLU: Line of dialogue
+    BABLU [wave]: Line spoken in the "wave" pose
     (stage direction)
 """
 import re
@@ -14,6 +15,7 @@ from dataclasses import dataclass, field
 class Line:
     speaker: str
     text: str
+    pose: str = "idle"
 
 
 @dataclass
@@ -47,7 +49,7 @@ def parse(text: str) -> Script:
         elif s.startswith("(") and scenes:
             scenes[-1].directions.append(s.strip("()"))
         else:
-            m = re.match(r"^([A-Za-z\u0900-\u097F ]+):\s*(.+)$", s)
+            m = re.match(r"^([A-Za-z\u0900-\u097F ]+?)\s*(?:\[(\w+)\])?\s*:\s*(.+)$", s)
             if m and scenes:
-                scenes[-1].lines.append(Line(m.group(1).strip().upper(), m.group(2).strip()))
+                scenes[-1].lines.append(Line(m.group(1).strip().upper(), m.group(3).strip(), m.group(2) or "idle"))
     return Script(title, scenes)

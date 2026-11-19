@@ -5,7 +5,8 @@
 **One script in, a whole cartoon episode out.**
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![Status](https://img.shields.io/badge/status-early%20development-orange)
+![Version](https://img.shields.io/badge/version-0.2.0-orange)
+![Tests](https://github.com/swapagrawal14/vid-liboom/actions/workflows/tests.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Made with](https://img.shields.io/badge/made%20with-AI%20art%20%2B%20shaders-purple)
 
@@ -39,26 +40,56 @@ script.md  ──►  scene planner  ──►  characters + backgrounds  ──
 ## 🚀 Quick start
 
 ```bash
-pip install -r requirements.txt   # needs ffmpeg on PATH
-python -m vidliboom examples/bablu_mausam.md -o output/episode.mp4
+pip install -e .                  # needs ffmpeg on PATH
+export CARTESIA_API_KEY=...       # optional, for voices
+vidliboom examples/bablu_mausam.md -o output/episode.mp4 --voice
+vidliboom examples/bablu_mausam.md -o output/reel.mp4 --voice --format vertical
 ```
 
-Script format:
+![Bablu, Didi and Uncle on the park bench](docs/preview.jpg)
+
+Script format ([full guide](docs/SCRIPT_FORMAT.md)):
 
 ```markdown
-# Episode title
-## Scene: Ghar ke bahar | bg=sky | mood=day
-BABLU: Aaj toh mausam ekdum mast hai!
-(stage direction)
+# Bablu aur Personal Mausam
+## Scene: Park ki bench | bg=sky | mood=day
+BABLU [proud]: Aaj toh mausam ekdum mast hai!
+DIDI [sideeye]: Upar dekho, baadal aa rahe hain.
 ```
 
-Moods: `day`, `sunset`, `night`, `rain`. Put character PNGs in `assets/characters/` (e.g. `BABLU.png`).
+## 🧰 Features
+
+| Feature | What it does |
+|---|---|
+| 🎭 Pose library | AI-art cut-outs per pose (`BABLU [wave]: ...`), with Bablu, Didi and Uncle included |
+| 🗣️ Voices | Cartesia text-to-speech per character, cached per line, timing driven by real audio length |
+| 👄 Talk motion | Characters bounce and tilt with the loudness of their own voice |
+| 🌦️ Mood backgrounds | Procedural day, sunset, night (twinkling stars) and rain skies |
+| 🎵 Music | Mood-matched chord pads generated in code, ducked under dialogue |
+| 🎥 Camera | Smooth zoom toward whoever is speaking (`--no-camera` to turn off) |
+| 🌗 Transitions | Fade through black between scenes and at the end |
+| 📱 Formats | `landscape` 16:9, `vertical` 9:16 for Reels and Shorts, `square` 1:1 |
+| 💬 Subtitles | Burned in on a soft bar, plus an `.srt` file next to the video |
+| 🤖 Agent skill | [`skills/vid-liboom/SKILL.md`](skills/vid-liboom/SKILL.md) teaches AI agents to make episodes |
+
+## 📁 Project layout
+
+```
+vidliboom/        script parser, planner, voice, music, backgrounds, characters, render
+assets/characters character pose PNGs (BABLU, DIDI, UNCLE)
+examples/         sample scripts
+docs/             script format guide
+skills/           agent skill
+tests/            pytest suite (runs on GitHub Actions)
+voices.json       speaker to Cartesia voice map
+```
 
 ## 🗺️ Roadmap
 
 | # | Milestone | Status |
 |---|-----------|--------|
-| 1 | Script-to-episode pipeline | 🚧 v0.1: parser, planner, shader backgrounds, subtitles, render |
+| 1 | Script-to-episode pipeline | ✅ v0.2: poses, voices, music, camera, formats, subtitles |
+| 1b | True lip-sync and blinks | 🚧 Next up |
 | 2 | Interactive dental explainers | 📝 Planned |
 | 3 | Playable mini-games after each episode | 📝 Planned |
 | 4 | Personalised videos from one template | 📝 Planned |
