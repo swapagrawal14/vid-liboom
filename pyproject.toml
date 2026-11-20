@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vid-liboom"
-version = "0.2.0"
+version = "0.3.0"
 description = "One script in, a whole cartoon episode out."
 readme = "README.md"
 license = { text = "MIT" }
@@ -20,3 +20,6 @@ vidliboom = "vidliboom.__main__:main"
 
 [tool.setuptools]
 packages = ["vidliboom"]
+
+[tool.setuptools.package-data]
+vidliboom = ["player_template.html"]

@@ -4,7 +4,8 @@ import subprocess
 import wave
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from . import backgrounds, characters, music, voice
+from . import backgrounds, characters, music, voice, scenes, lipsync
+from .weather_fx import WeatherFX
 
 W, H, FPS = 1280, 720, 24
 FORMATS = {"landscape": (1280, 720), "vertical": (720, 1280), "square": (1080, 1080)}
@@ -86,7 +87,9 @@ def write_srt(shots, path):
     return path
 
 
-def render(script, shots, total, out="episode.mp4", audio=None, fmt="landscape", camera=True):
+def render(script, shots, total, out="episode.mp4", audio=None, fmt="landscape", camera=True,
+           directions=None, weather=True, lips=True):
+    """directions: optional list from director.direct(); drives shots and personal weather."""
     global W, H
     W, H = FORMATS[fmt]
     write_srt(shots, os.path.splitext(out)[0] + ".srt")
@@ -99,6 +102,13 @@ def render(script, shots, total, out="episode.mp4", audio=None, fmt="landscape",
            "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-c:a", "aac", "-b:a", "160k", out]
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     last_pose = {}
+    dmap = {id(d.line): d for d in (directions or [])}
+    tracks = {id(s): lipsync.mouth_track(s.audio) for s in shots if lips and s.audio is not None}
+    cast_all = list(dict.fromkeys(s.speaker for s in shots))
+    blinks = {n: lipsync.blink_schedule(total + 1, seed=i) for i, n in enumerate(cast_all)}
+    fx = WeatherFX(seed=3)
+    cam_z = 1.0
+    cam_x = W / 2
     for f in range(int(total * FPS)):
         t = f / FPS
         shot = next((s for s in shots if s.start <= t < s.start + s.duration), None)
@@ -106,7 +116,7 @@ def render(script, shots, total, out="episode.mp4", audio=None, fmt="landscape",
             shot_sc = shots[-1].scene
         else:
             shot_sc = shot.scene if shot else script.scenes[0]
-        img = Image.fromarray(backgrounds.render(W, H, t, shot_sc.mood, shot_sc.bg))
+        img = Image.fromarray(scenes.render(W, H, t, shot_sc.mood, shot_sc.bg))
         if t < shots[0].start:
             d = ImageDraw.Draw(img)
             x = (W - d.textlength(script.title, font=tfont)) / 2
@@ -123,17 +133,40 @@ def render(script, shots, total, out="episode.mp4", audio=None, fmt="landscape",
                     loud = float(e[k]) if k < len(e) else 0.0
                 elif shot and name == shot.speaker:
                     loud = 0.5 + 0.5 * np.sin(t * 20)
+                fi = min(int(t * FPS), len(blinks[name]) - 1)
+                op, vis = (tracks[id(shot)].at(t - shot.start) if shot and name == shot.speaker and id(shot) in tracks
+                           else (0.0, "closed"))
+                face = (op, vis, float(blinks[name][fi])) if lips else None
                 seated = characters.has_poses(name)
                 hgt = int(min(H * 0.56, W / (len(cast) + 0.6) * (1.15 if W >= H else 1.6))) if seated else int(H * 0.47)
-                ch, bob = characters.pose(name, t, loud, hgt, last_pose.get(name, "idle"), phase=i * 1.7)
+                ch, bob = characters.pose(name, t, loud, hgt, last_pose.get(name, "idle"), phase=i * 1.7, face=face)
                 if seated:
                     _bench(img, slots[name], int(hgt * 0.65))
                 base = int(H * 0.84) if seated else int(H * 0.86)
-                img.paste(ch, (slots[name] - ch.width // 2, base - ch.height + bob), ch)
+                top = base - ch.height + bob
+                img.paste(ch, (slots[name] - ch.width // 2, top), ch)
+                if weather and dmap:
+                    mine = [s for s in shots if s.speaker == name and s.scene is shot_sc and s.start <= t]
+                    if mine:
+                        ls = mine[-1]; dd = dmap.get(id(ls.line))
+                        if dd and dd.emotion != "neutral":
+                            age = t - ls.start
+                            end = ls.duration + 2.5
+                            k = min(1.0, age / 0.35) * max(0.0, min(1.0, (end - age) / 0.5))
+                            if k > 0.01:
+                                fx.draw(img, (slots[name], top + int(hgt * 0.04)), hgt * 0.32,
+                                        dd.emotion, k * (0.55 + 0.45 * dd.intensity), t)
             if camera and shot:
-                k = min(1.0, (t - shot.start) / 1.2)
-                z = 1 + 0.07 * (k * k * (3 - 2 * k))
-                img = _camera(img, slots[shot.speaker], H * 0.6, z)
+                dd = dmap.get(id(shot.line))
+                if dd:
+                    tz = dd.zoom
+                    tx = slots.get(dd.target, W / 2) if dd.shot != "wide" and dd.target else W / 2
+                    rate = 0.35 if dd.shot == "punch-in" else 0.08
+                else:
+                    tz, tx, rate = 1.07, slots[shot.speaker], 0.08
+                cam_z += (tz - cam_z) * rate
+                cam_x += (tx - cam_x) * rate
+                img = _camera(img, cam_x, H * 0.6, cam_z)
             if shot:
                 _subtitle(img, f"{shot.speaker.title()}: {shot.text}", font)
         arr = np.asarray(img.convert("RGB"))

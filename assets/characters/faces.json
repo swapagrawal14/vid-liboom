@@ -1,0 +1,49 @@
+{
+  "_doc": "Face landmarks for lip-sync/blink (vidliboom/lipsync.py). Points are [x, y] relative to the PNG (x / width, y / height, 0..1). *_w sizes are a fraction of image width, *_h a fraction of image height; eye_w / eye_h may be a [left, right] pair. type 'mouth' = visible mouth that gets redrawn; type 'mask' = face mask that is mesh-warped while talking. eyes_closed = the pose's art already has closed eyes, so blinks are skipped (or a list per eye, e.g. a wink). warp scales mask deformation (e.g. a hand over the mask). eye_style 'dot' (solid eyes: lids cover everything) or 'outlined' (eyes with whites + outline: the outline is kept around the lid); set per character, overridable per pose.",
+  "BABLU": {
+    "type": "mouth",
+    "eye_style": "dot",
+    "skin": [254, 233, 206],
+    "outline": [50, 35, 30],
+    "poses": {
+      "idle":    {"mouth": [0.614, 0.247], "mouth_w": 0.052, "mouth_h": 0.012, "eyes": [[0.536, 0.239], [0.707, 0.238]], "eye_w": 0.028, "eye_h": 0.012},
+      "flail":   {"mouth": [0.526, 0.279], "mouth_w": 0.077, "mouth_h": 0.043, "eyes": [[0.501, 0.239], [0.560, 0.239]], "eye_w": 0.020, "eye_h": 0.013},
+      "flinch":  {"mouth": [0.511, 0.280], "mouth_w": 0.113, "mouth_h": 0.026, "eyes": [[0.471, 0.235], [0.566, 0.235]], "eye_w": 0.045, "eye_h": 0.022, "eyes_closed": true},
+      "grope":   {"mouth": [0.538, 0.280], "mouth_w": 0.110, "mouth_h": 0.018, "eyes": [[0.501, 0.247], [0.598, 0.247]], "eye_w": 0.028, "eye_h": 0.013},
+      "lookup":  {"mouth": [0.602, 0.279], "mouth_w": 0.066, "mouth_h": 0.025, "eyes": [[0.536, 0.243], [0.643, 0.238]], "eye_w": 0.032, "eye_h": 0.015},
+      "proud":   {"mouth": [0.581, 0.270], "mouth_w": 0.096, "mouth_h": 0.016, "eyes": [[0.528, 0.246], [0.640, 0.2425]], "eye_w": 0.040, "eye_h": 0.010, "eyes_closed": true},
+      "slump":   {"mouth": [0.603, 0.282], "mouth_w": 0.078, "mouth_h": 0.008, "eyes": [[0.536, 0.244], [0.640, 0.244]], "eye_w": 0.040, "eye_h": 0.012},
+      "smug":    {"mouth": [0.409, 0.268], "mouth_w": 0.103, "mouth_h": 0.016, "eyes": [[0.380, 0.240], [0.454, 0.237]], "eye_w": 0.032, "eye_h": 0.012, "eyes_closed": true},
+      "wave":    {"mouth": [0.485, 0.280], "mouth_w": 0.101, "mouth_h": 0.031, "eyes": [[0.444, 0.244], [0.531, 0.244]], "eye_w": 0.035, "eye_h": 0.014, "eyes_closed": true},
+      "worried": {"mouth": [0.557, 0.280], "mouth_w": 0.111, "mouth_h": 0.008, "eyes": [[0.507, 0.244], [0.621, 0.242]], "eye_w": 0.060, "eye_h": 0.025, "eye_style": "outlined"}
+    }
+  },
+  "DIDI": {
+    "type": "mask",
+    "eye_style": "outlined",
+    "skin": [205, 135, 95],
+    "outline": [50, 35, 30],
+    "poses": {
+      "idle":     {"mask": [0.640, 0.249], "mask_w": 0.31, "mask_h": 0.064, "eyes": [[0.605, 0.204], [0.760, 0.2045]], "eye_w": [0.135, 0.105], "eye_h": 0.024},
+      "giggle":   {"mask": [0.578, 0.250], "mask_w": 0.25, "mask_h": 0.060, "eyes": [[0.551, 0.197], [0.680, 0.197]], "eye_w": 0.075, "eye_h": 0.020, "eyes_closed": true, "warp": 0.5},
+      "photo":    {"mask": [0.537, 0.250], "mask_w": 0.26, "mask_h": 0.064, "eyes": [[0.503, 0.199], [0.648, 0.199]], "eye_w": 0.080, "eye_h": 0.020, "eyes_closed": [true, false]},
+      "sideeye":  {"mask": [0.641, 0.249], "mask_w": 0.32, "mask_h": 0.064, "eyes": [[0.598, 0.199], [0.762, 0.199]], "eye_w": [0.125, 0.105], "eye_h": 0.022},
+      "startled": {"mask": [0.440, 0.250], "mask_w": 0.24, "mask_h": 0.070, "eyes": [[0.423, 0.197], [0.521, 0.196]], "eye_w": 0.062, "eye_h": 0.038}
+    }
+  },
+  "UNCLE": {
+    "type": "mask",
+    "eye_style": "dot",
+    "skin": [252, 219, 196],
+    "outline": [50, 35, 30],
+    "poses": {
+      "idle":   {"mask": [0.500, 0.192], "mask_w": 0.30, "mask_h": 0.100, "eyes": [[0.410, 0.129], [0.585, 0.129]], "eye_w": 0.025, "eye_h": 0.015},
+      "armsup": {"mask": [0.547, 0.255], "mask_w": 0.20, "mask_h": 0.090, "eyes": [[0.491, 0.194], [0.599, 0.194]], "eye_w": 0.017, "eye_h": 0.012},
+      "hands":  {"mask": [0.500, 0.228], "mask_w": 0.30, "mask_h": 0.100, "eyes": [[0.410, 0.178], [0.587, 0.178]], "eye_w": 0.025, "eye_h": 0.015},
+      "lookup": {"mask": [0.498, 0.190], "mask_w": 0.30, "mask_h": 0.100, "eyes": [[0.407, 0.127], [0.589, 0.127]], "eye_w": 0.070, "eye_h": 0.030, "eye_style": "outlined"},
+      "read":   {"mask": [0.500, 0.190], "mask_w": 0.25, "mask_h": 0.100, "eyes": [[0.425, 0.133], [0.573, 0.133]], "eye_w": 0.022, "eye_h": 0.015},
+      "shrug":  {"mask": [0.504, 0.190], "mask_w": 0.18, "mask_h": 0.100, "eyes": [[0.449, 0.131], [0.550, 0.131]], "eye_w": 0.022, "eye_h": 0.013},
+      "zen":    {"mask": [0.500, 0.190], "mask_w": 0.30, "mask_h": 0.100, "eyes": [[0.406, 0.131], [0.594, 0.131]], "eye_w": 0.070, "eye_h": 0.015, "eyes_closed": true}
+    }
+  }
+}

@@ -36,9 +36,14 @@ def has_poses(name):
     return os.path.isdir(f"{ASSETS}/{name}")
 
 
-def pose(name, t, loud, h_target, pose_name="idle", phase=0.0):
-    """loud: 0..1 speech loudness this frame (0 when silent)."""
+def pose(name, t, loud, h_target, pose_name="idle", phase=0.0, face=None):
+    """loud: 0..1 speech loudness this frame (0 when silent).
+    face: optional (openness, viseme, blink) for lip-sync and blinks."""
     im = load(name, pose_name)
+    if face is not None:
+        from . import lipsync
+        if lipsync.has_face(name, pose_name):
+            im = lipsync.apply_face(im, name, pose_name, *face)
     s = h_target / im.height
     breathe = 0.012 * math.sin(t * 1.8 + phase)
     sq = 1 + breathe + 0.05 * loud

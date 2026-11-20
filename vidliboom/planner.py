@@ -23,12 +23,14 @@ class Shot:
         return self.line.text
 
 
-def plan(script, title_card=2.5, voicer=None):
+def plan(script, title_card=2.5, voicer=None, pauses=None):
+    """pauses: optional {id(line): seconds} from the director."""
     shots, t = [], title_card
     for sc in script.scenes:
         for ln in sc.lines:
             audio = voicer(ln) if voicer else None
-            d = len(audio) / 44100 + GAP if audio is not None else max(MIN_SHOT, len(ln.text.split()) / WORDS_PER_SEC + 0.6)
+            gap = (pauses or {}).get(id(ln), GAP)
+            d = len(audio) / 44100 + gap if audio is not None else max(MIN_SHOT, len(ln.text.split()) / WORDS_PER_SEC + 0.6)
             shots.append(Shot(sc, ln, t, d, audio))
             t += d
     return shots, t + 1.0

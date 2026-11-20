@@ -5,7 +5,7 @@
 **One script in, a whole cartoon episode out.**
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![Version](https://img.shields.io/badge/version-0.2.0-orange)
+![Version](https://img.shields.io/badge/version-0.3.0-orange)
 ![Tests](https://github.com/swapagrawal14/vid-liboom/actions/workflows/tests.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Made with](https://img.shields.io/badge/made%20with-AI%20art%20%2B%20shaders-purple)
@@ -70,15 +70,20 @@ DIDI [sideeye]: Upar dekho, baadal aa rahe hain.
 | 🌗 Transitions | Fade through black between scenes and at the end |
 | 📱 Formats | `landscape` 16:9, `vertical` 9:16 for Reels and Shorts, `square` 1:1 |
 | 💬 Subtitles | Burned in on a soft bar, plus an `.srt` file next to the video |
+| 🎬 AI director | Reads each line, detects the emotion (Hindi, Hinglish, English), then picks the pose, the shot (wide, two-shot, close-up, punch-in, reaction) and comic pauses on its own (`--no-director` to turn off) |
+| ⛅ Personal weather | Every character carries their own weather above their head that follows their emotion: sun when happy, rain cloud when sad, storm when angry, rainbow when excited (`--no-weather`) |
+| 👄 Lip-sync and blinks | Mouth shapes and openness estimated from the voice audio (loudness and spectrum, not phoneme-accurate), plus natural blinks (`--no-lipsync`) |
+| 🏙️ Parallax scenes | Park, metro, clinic, city, space and rooftop, each in day, sunset, night or rain, with layered parallax camera moves |
+| 🔀 Branching stories | Choose-your-own-adventure scripts (`-> Label \| goto=...`) render every path and export a self-contained HTML player with countdown choices and multiple endings |
 | 🤖 Agent skill | [`skills/vid-liboom/SKILL.md`](skills/vid-liboom/SKILL.md) teaches AI agents to make episodes |
 
 ## 📁 Project layout
 
 ```
-vidliboom/        script parser, planner, voice, music, backgrounds, characters, render
-assets/characters character pose PNGs (BABLU, DIDI, UNCLE)
+vidliboom/        parser, planner, director, voice, music, scenes, weather FX, lip-sync, branching, render
+assets/characters character pose PNGs (BABLU, DIDI, UNCLE) and face landmarks (faces.json)
 examples/         sample scripts
-docs/             script format guide
+docs/             script format guide and preview image
 skills/           agent skill
 tests/            pytest suite (runs on GitHub Actions)
 voices.json       speaker to Cartesia voice map
@@ -88,10 +93,10 @@ voices.json       speaker to Cartesia voice map
 
 | # | Milestone | Status |
 |---|-----------|--------|
-| 1 | Script-to-episode pipeline | ✅ v0.2: poses, voices, music, camera, formats, subtitles |
-| 1b | True lip-sync and blinks | 🚧 Next up |
+| 1 | Script-to-episode pipeline | ✅ v0.3: AI director, personal weather, lip-sync, parallax scenes, branching |
+| 1b | Lip-sync and blinks | ✅ v0.3 (audio-driven heuristic; phoneme-accurate is next) |
 | 2 | Interactive dental explainers | 📝 Planned |
-| 3 | Playable mini-games after each episode | 📝 Planned |
+| 3 | Playable mini-games after each episode | 🚧 Branching player in v0.3 |
 | 4 | Personalised videos from one template | 📝 Planned |
 | 5 | Beat-synced music visuals | 📝 Planned |
 | 6 | Still illustration to animation | 📝 Planned |
